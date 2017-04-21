@@ -18,9 +18,9 @@ credentials file that gives access to those results.
 
 ### Requirements
 
-#. The name of the Google Sheet containing the results of the survey.
+1. The name of the Google Sheet containing the results of the survey.
    Usually it will be named something like "Name of my survey (Responses)".
-#. A Service Account Credentials file,
+2. A Service Account Credentials file,
    e.g. "path/to/service-account-creds.json"
 
 ### Instructions
@@ -33,11 +33,11 @@ Sheets API. Within this .json file is a (machine-generated) email address.
 The second step is to share the Google Sheet containing the results of
 the survey with this email address.
 
-#. Go to console.developer.google.com. Create a new project (or use an
+1. Go to console.developer.google.com. Create a new project (or use an
    existing one). I called mine "madpy". Using this project, enable
    the Google Sheets API via the Dashboard, and then create new Service
    Account Credentials. You should get a .json file at the end. Ta da!
-#. Go to drive.google.com, locate the Google Sheet with the results
+2. Go to drive.google.com, locate the Google Sheet with the results
    of the survey, and share the Google Sheet with the email address that
    was created along with the Service Account Credentials. Open up the
    .json file downloaded in the previous step to find the email address.
@@ -62,6 +62,8 @@ You can run Google Survey from the command line as a python module,
 denoted by the "-m" flag.
 
 ```bash
-python -m google_survey -s "Name of my survey (Responses)" -c path/to/service-account-creds.json > `date +results-%Y-%m-%d.csv`
+python -m google_survey \
+   -s "Name of my survey (Responses)" -c path/to/service-account-creds.json \
+   > `date +results-%Y-%m-%d.csv`
 ```
 
