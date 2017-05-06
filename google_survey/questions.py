@@ -16,14 +16,14 @@ def get_questions(survey_url, requests_session=None):
     questions = pandas.DataFrame({
         'div': question_list.find_all('div', attrs={'class': CLS_QUESTION})
     })
-    questions['title'] = questions['div'].apply(
+    questions['question'] = questions['div'].apply(
         lambda div: div.find('div', attrs={'class': CLS_QUESTION_TITLE}).text
     )
 
     questions['choices'] = questions['div'].apply(extract_choices)
     questions['choices_json'] = questions.choices.apply(lambda x: json.dumps(x))
-    questions['id'] = ['q{}'.format(i) for i in range(len(questions))]
-    return questions[['id', 'title', 'choices_json']]
+    questions['question_id'] = ['q{}'.format(i) for i in range(len(questions))]
+    return questions[['question_id', 'question', 'choices_json']]
 
 
 def get_survey_html(survey_url, requests_session=None, output=None):

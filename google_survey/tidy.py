@@ -4,7 +4,7 @@ import pandas
 
 def tidy_responses(wide_responses):
     """Tranform Google Survey responses from wide to long format.
-    
+
     Args:
         wide_responses: pandas.DataFrame of survey responses in wide format,
             with one survey-taker per row, and different questions in different
@@ -25,7 +25,7 @@ def tidy_responses(wide_responses):
                                 value_name='response_str')
 
     # Split response strings into one response per row
-    long_responses = melt_responses(response_strs)
+    long_responses = melt_response_strs(response_strs)
 
     return long_responses
 
