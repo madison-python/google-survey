@@ -3,3 +3,4 @@ gspread
 pandas
 pytest
 fire
+betamax

@@ -9,8 +9,8 @@ from .survey_css import (CLS_QUESTION_LIST, CLS_QUESTION, CLS_QUESTION_TITLE,
                          CLS_QUESTION_TYPES)
 
 
-def get_questions(survey_url):
-    survey_html = get_survey_html(survey_url)
+def get_questions(survey_url, requests_session=None):
+    survey_html = get_survey_html(survey_url, requests_session=requests_session)
     soup = BeautifulSoup(survey_html, 'html5lib')
     question_list = soup.find('div', attrs={'class': CLS_QUESTION_LIST})
     questions = pandas.DataFrame({
@@ -26,11 +26,12 @@ def get_questions(survey_url):
     return questions[['id', 'title', 'choices_json']]
 
 
-def get_survey_html(survey_url, output=None):
+def get_survey_html(survey_url, requests_session=None, output=None):
     """Get the survey html from a url or a file.
 
     Args:
         survey_url: url or path to a text file containing the url.
+        requests_session: Optional. requests.Session() to use to get the survey.
         output: survey html will be saved to this location if provided.
     Returns:
         html contents of the survey
@@ -38,7 +39,10 @@ def get_survey_html(survey_url, output=None):
     if path.exists(survey_url):
         survey_url = open(survey_url).read().strip()
 
-    response = requests.get(survey_url)
+    if requests_session is None:
+        requests_session = requests.Session()
+
+    response = requests_session.get(survey_url)
 
     if output:
         with open(output, 'wb') as handle:
