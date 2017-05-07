@@ -1,10 +1,10 @@
 import sys
 import fire
-from .responses import get_responses
+from .all import get
 
 class GoogleSurveyCLI:
-    def get(self, sheet_name, creds_file, output=None):
-        responses = get_responses(sheet_name, creds_file)
+    def get(self, survey_info_yaml, output=None):
+        responses = get(survey_info_yaml)
         if output is None:
             output = sys.stdout
         responses.to_csv(output, index=False)
