@@ -18,11 +18,11 @@ def tidy_responses(wide_responses):
 
     # Assign a unique identifier to each survey taker
     person_ids = ['p{}'.format(i) for i in list(wide_responses.index)]
-    wide_responses.insert(0, 'person', person_ids)
+    wide_responses.insert(0, 'person_id', person_ids)
 
     # Melt the data from wide to long
-    response_strs = pandas.melt(wide_responses, 'person', var_name='question',
-                                value_name='response_str')
+    response_strs = pandas.melt(wide_responses, 'person_id',
+                                var_name='question', value_name='response_str')
 
     # Split response strings into one response per row
     long_responses = melt_response_strs(response_strs)
@@ -36,7 +36,7 @@ def melt_response_strs(response_strs):
     An example response str is 'Libraries, Offices'. The resulting DataFrame
     will have two rows, one for each response item, e.g, ['Libraries', 'Offices'].
     """
-    Response = namedtuple('Response', 'person question response_n response')
+    Response = namedtuple('Response', 'person_id question response_n response')
 
     new_rows = []
     for old_row in response_strs.itertuples():
@@ -50,7 +50,8 @@ def melt_response_strs(response_strs):
             responses = [response_str]
 
         # Create rows for each response
-        rows = [Response(old_row.person, old_row.question, response_n, response)
+        rows = [Response(old_row.person_id, old_row.question,
+                         response_n, response)
                 for response_n, response in enumerate(responses)]
         new_rows.extend(rows)
 
