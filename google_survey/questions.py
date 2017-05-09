@@ -5,20 +5,27 @@ import requests
 import pandas
 from bs4 import BeautifulSoup
 
-from .survey_css import (CLS_QUESTION_LIST, CLS_QUESTION, CLS_QUESTION_TITLE,
-                         CLS_QUESTION_TYPES)
+from .survey_css import (CLS_QUESTION, CLS_QUESTION_TITLE, CLS_QUESTION_TYPES)
 
 
 def get_questions(survey_url, requests_session=None):
     survey_html = get_survey_html(survey_url, requests_session=requests_session)
     soup = BeautifulSoup(survey_html, 'html5lib')
-    question_list = soup.find('div', attrs={'class': CLS_QUESTION_LIST})
+
+    # Extract the divs for each question
     questions = pandas.DataFrame({
-        'div': question_list.find_all('div', attrs={'class': CLS_QUESTION})
+        'div': soup.find_all('div', attrs={'class': CLS_QUESTION})
     })
+
+    # Extract question text from each question
     questions['question'] = questions['div'].apply(
         lambda div: div.find('div', attrs={'class': CLS_QUESTION_TITLE}).text
     )
+
+    # Required questions are denoted with an asterisk in the html,
+    # but not in the survey responses. Remove the asterisk so that
+    # the response data can be merged with the question data.
+    questions['question'] = questions.question.str.replace(' \*$', '')
 
     questions['choices'] = questions['div'].apply(extract_choices)
     questions['choices_json'] = questions.choices.apply(lambda x: json.dumps(x))

@@ -10,7 +10,6 @@ inspecting the results in a browser.
 
 Warning! Do not trust... Always verify.
 """
-CLS_QUESTION_LIST = 'freebirdFormviewerViewItemList'
 CLS_QUESTION = 'freebirdFormviewerViewItemsItemItem'
 CLS_QUESTION_TITLE = 'freebirdFormviewerViewItemsItemItemTitle'
 
