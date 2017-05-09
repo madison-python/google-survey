@@ -17,6 +17,9 @@ def get_questions(survey_url, requests_session=None):
         'div': soup.find_all('div', attrs={'class': CLS_QUESTION})
     })
 
+    # Assign question numbers. ASSUMES question divs are in order.
+    questions['question_id'] = ['q{}'.format(i) for i in range(len(questions))]
+
     # Extract question text from each question
     questions['question'] = questions['div'].apply(
         lambda div: div.find('div', attrs={'class': CLS_QUESTION_TITLE}).text
@@ -27,9 +30,10 @@ def get_questions(survey_url, requests_session=None):
     # the response data can be merged with the question data.
     questions['question'] = questions.question.str.replace(' \*$', '')
 
+    # Extract choices from each question div, and convert to json for safety.
     questions['choices'] = questions['div'].apply(extract_choices)
     questions['choices_json'] = questions.choices.apply(lambda x: json.dumps(x))
-    questions['question_id'] = ['q{}'.format(i) for i in range(len(questions))]
+
     return questions[['question_id', 'question', 'choices_json']]
 
 
